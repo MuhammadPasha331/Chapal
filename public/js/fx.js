@@ -124,11 +124,19 @@ export function emojiBurst(x, y, emoji = "🎉", count = 10) {
   }
 }
 
-/* ── Bunting across the top ─────────────────────────── */
-export function buildBunting() {
+/* ── Golden arch above the home page ────────────────── */
+export function buildGoldenArch() {
+  if (document.body.classList.contains("home")) {
+    const arch = document.createElement("div");
+    arch.className = "golden-arch";
+    arch.setAttribute("aria-hidden", "true");
+    document.body.prepend(arch);
+    return;
+  }
   if (document.querySelector(".bunting")) return;
   const row = document.createElement("div");
-  row.className = "bunting"; row.setAttribute("aria-hidden", "true");
+  row.className = "bunting";
+  row.setAttribute("aria-hidden", "true");
   const count = Math.max(12, Math.floor(innerWidth / 44));
   for (let i = 0; i < count; i++) {
     const flag = document.createElement("span");
@@ -140,22 +148,22 @@ export function buildBunting() {
   document.body.prepend(row);
 }
 
-/* ── Sparkle trail following the mouse ──────────────── */
-export function sparkleTrail() {
+/* ── Fire trail following the mouse ─────────────────── */
+export function fireTrail() {
   if (reducedMotion || !matchMedia("(pointer: fine)").matches) return;
   let last = 0;
   addEventListener("pointermove", (e) => {
     const now = performance.now();
-    if (now - last < 35) return;
+    if (now - last < 24) return;
     last = now;
-    const s = document.createElement("span");
-    s.className = "sparkle";
-    s.style.left = `${e.clientX - 4}px`; s.style.top = `${e.clientY - 4}px`;
-    s.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
-    s.style.setProperty("--dx", `${(Math.random() - 0.5) * 40}px`);
-    s.style.setProperty("--dy", `${Math.random() * 30 + 10}px`);
-    document.body.append(s);
-    setTimeout(() => s.remove(), 800);
+    const flame = document.createElement("span");
+    flame.className = "flame-particle";
+    flame.style.left = `${e.clientX - 7}px`;
+    flame.style.top = `${e.clientY - 10}px`;
+    flame.style.setProperty("--drift", `${(Math.random() - 0.5) * 30}px`);
+    flame.style.setProperty("--size", `${10 + Math.random() * 12}px`);
+    document.body.append(flame);
+    setTimeout(() => flame.remove(), 650);
   });
 }
 
@@ -199,8 +207,8 @@ export function revealOnScroll() {
 
 // Everything a page needs for the shared look.
 export function initFx() {
-  buildBunting();
-  sparkleTrail();
+  buildGoldenArch();
+  fireTrail();
   enableTilt();
   revealOnScroll();
 }
